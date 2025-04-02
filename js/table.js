@@ -97,9 +97,14 @@ async function renderSucursalComparison() {
 
 async function renderTable() {
     try {
+        const container = document.getElementById('tableContainer');
+        if (!container) {
+            console.error('Table container not found');
+            return;
+        }
+        
         checkAuth();
         const userRole = localStorage.getItem('userRole');
-        const container = document.getElementById('tableContainer');
         container.innerHTML = '<div class="loading">Cargando...</div>';
 
         const snapshot = await get(ref(db, 'scores'));
@@ -175,7 +180,10 @@ async function renderTable() {
         await renderSucursalComparison();
     } catch (error) {
         console.error('Error rendering table:', error);
-        container.innerHTML = '<div class="error">Error al cargar los datos</div>';
+        const container = document.getElementById('tableContainer');
+        if (container) {
+            container.innerHTML = '<div class="error">Error al cargar los datos: ' + error.message + '</div>';
+        }
     }
 }
 
