@@ -9,28 +9,29 @@ function createNavbar() {
                 <span></span>
                 <span></span>
             </div>
-            <div class="nav-links">
-                <a href="home.html" class="nav-link">Inicio</a>
-                <a href="sucursales.html" class="nav-link">Sucursales</a>
-                <a href="evaluaciones.html" class="nav-link">Evaluaciones</a>
-                <a href="graficas.html" class="nav-link">Gráficas</a>
-            </div>
-            <div class="nav-right">
-                <span class="username">${localStorage.getItem('username') || ''}</span>
-                <button onclick="window.logout()" class="nav-btn">Cerrar Sesión</button>
+            <div class="nav-menu">
+                <div class="user-info-mobile">
+                    <span class="username">${localStorage.getItem('username') || ''}</span>
+                </div>
+                <div class="nav-links">
+                    <a href="home.html" class="nav-link">Inicio</a>
+                    <a href="sucursales.html" class="nav-link">Sucursales</a>
+                    <a href="evaluaciones.html" class="nav-link">Evaluaciones</a>
+                    <a href="graficas.html" class="nav-link">Gráficas</a>
+                </div>
+                <div class="nav-right">
+                    <button onclick="window.logout()" class="nav-btn">Cerrar Sesión</button>
+                </div>
             </div>
         </nav>
     `;
 
-    // Add toggle functionality
     const toggle = navbar.querySelector('.nav-toggle');
-    const navLinks = navbar.querySelector('.nav-links');
-    const navRight = navbar.querySelector('.nav-right');
+    const navMenu = navbar.querySelector('.nav-menu');
     
     toggle.addEventListener('click', () => {
-        navLinks.classList.toggle('active');
-        navRight.classList.toggle('active');
         toggle.classList.toggle('active');
+        navMenu.classList.toggle('active');
     });
 }
 

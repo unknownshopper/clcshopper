@@ -299,38 +299,46 @@ input[disabled] {
     background-color: #45a049;
 }
 
-/* Update existing navbar styles */
+/* Update navbar styles */
 .navbar {
     background-color: #333;
     padding: 1rem;
     color: white;
+    position: relative;
+}
+
+.nav-menu {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    position: relative;
+    gap: 2rem;
 }
 
 .nav-toggle {
     display: none;
-    flex-direction: column;
-    gap: 6px;
-    cursor: pointer;
-    padding: 5px;
 }
 
-.nav-toggle span {
-    display: block;
-    width: 25px;
-    height: 3px;
-    background-color: white;
-    transition: all 0.3s ease;
+.user-info-mobile {
+    display: none;
 }
 
 /* Mobile styles */
 @media screen and (max-width: 768px) {
     .nav-toggle {
         display: flex;
-        z-index: 2;
+        flex-direction: column;
+        gap: 6px;
+        cursor: pointer;
+        padding: 5px;
+        z-index: 1000;
+    }
+
+    .nav-toggle span {
+        display: block;
+        width: 25px;
+        height: 3px;
+        background-color: white;
+        transition: all 0.3s ease;
     }
 
     .nav-toggle.active span:nth-child(1) {
@@ -345,25 +353,48 @@ input[disabled] {
         transform: rotate(-45deg) translate(6px, -6px);
     }
 
-    .nav-links, .nav-right {
+    .nav-menu {
         display: none;
-        width: 100%;
         flex-direction: column;
-        align-items: center;
-        gap: 1rem;
-        padding: 1rem 0;
-    }
-
-    .nav-links.active, .nav-right.active {
-        display: flex;
         position: absolute;
         top: 100%;
         left: 0;
+        right: 0;
         background-color: #333;
+        padding: 1rem;
+        gap: 1rem;
     }
 
-    .navbar {
-        flex-wrap: wrap;
+    .nav-menu.active {
+        display: flex;
+    }
+
+    .user-info-mobile {
+        display: block;
+        text-align: center;
+        padding: 1rem;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .nav-links {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        width: 100%;
+        text-align: center;
+    }
+
+    .nav-right {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        padding-top: 1rem;
+        border-top: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .nav-btn {
+        width: 100%;
+        max-width: 200px;
     }
 }
 
