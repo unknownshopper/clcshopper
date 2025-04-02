@@ -1,15 +1,17 @@
-import { initializeApp } from 'firebase/app';
-import { getDatabase } from 'firebase/database';
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js';
+import { getDatabase } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-database.js';
+import { getAuth } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js';
 
 const firebaseConfig = {
-    apiKey: "paste-your-actual-api-key-here",
+    apiKey: "your-api-key",
     authDomain: "your-project.firebaseapp.com",
-    databaseURL: "https://your-project-default-rtdb.firebaseio.com",
-    projectId: "your-project",
+    databaseURL: "your-project-database-url",
+    projectId: "your-project-id",
     storageBucket: "your-project.appspot.com",
-    messagingSenderId: "your-actual-sender-id",
-    appId: "your-actual-app-id"
+    messagingSenderId: "your-sender-id",
+    appId: "your-app-id"
 };
 
 const app = initializeApp(firebaseConfig);
+export const auth = getAuth(app);
 export const db = getDatabase(app);

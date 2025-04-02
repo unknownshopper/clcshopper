@@ -140,7 +140,7 @@ async function renderTable() {
                         <input type="number" min="0" max="2" 
                             value="${score}"
                             ${userRole !== 'admin' ? 'disabled' : ''}
-                            onchange="updateScore('${sucursal}', '${criteria}', this.value)">
+                            onchange="window.updateScore('${sucursal}', '${criteria}', this.value)">
                     </td>
                 `;
                 return Number(score || 0);
@@ -233,6 +233,11 @@ async function exportToCSV() {
         alert('Error al exportar CSV');
     }
 }
+
+// At the top of the file, after imports
+window.updateScore = updateScore;
+window.exportToCSV = exportToCSV;
+window.logout = logout;
 
 // Listen for real-time updates
 onValue(ref(db, 'scores'), () => {
