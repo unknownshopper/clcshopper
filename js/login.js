@@ -1,26 +1,31 @@
-const users = {
-    admin: { password: 'admin123', role: 'admin' },
-    user: { password: 'user123', role: 'user' }
-};
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { db } from './firebase-config.js';
 
-function handleLogin(event) {
+const auth = getAuth();
+
+async function handleLogin(event) {
     event.preventDefault();
     
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
 
-    // Add username storage when logging in
-    if (users[username] && users[username].password === password) {
+    try {
+        const userCredential = await signInWithEmailAndPassword(auth, username, password);
+        const user = userCredential.user;
+        
+        // Store user role and auth status
         localStorage.setItem('isAuthenticated', 'true');
-        localStorage.setItem('userRole', users[username].role);
-        localStorage.setItem('username', username);  // Add this line
+        localStorage.setItem('userRole', user.email.includes('admin') ? 'admin' : 'user');
+        localStorage.setItem('username', username);
+        
         window.location.href = 'evaluaciones.html';
-    } else {
+    } catch (error) {
+        console.error('Login error:', error);
         alert('Usuario o contraseña incorrectos');
     }
 }
 
-// Redirect if already authenticated
+// Check if already authenticated
 if (localStorage.getItem('isAuthenticated') === 'true') {
     window.location.href = 'evaluaciones.html';
 }
