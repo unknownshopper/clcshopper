@@ -248,3 +248,108 @@ ul:not(nav ul) li:hover {
     width: 100%;
     margin: 2rem 0;
 }
+
+.login-container {
+    max-width: 400px;
+    margin: 100px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+input[disabled] {
+    background-color: #f5f5f5;
+    cursor: not-allowed;
+}
+
+.control-btn {
+    margin: 0 5px;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 4px;
+    background-color: #4CAF50;
+    color: white;
+    cursor: pointer;
+}
+
+.control-btn:hover {
+    background-color: #45a049;
+}
+
+.navbar {
+    background-color: #333;
+    padding: 1rem;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.nav-brand {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.nav-links {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.nav-links a {
+    color: white;
+    text-decoration: none;
+}
+
+.nav-links a:hover {
+    color: #ddd;
+}
+
+.user-info {
+    color: #aaa;
+}
+
+.nav-btn {
+    background: #d9534f;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.nav-btn:hover {
+    background: #c9302c;
+}
+
+.loading {
+    text-align: center;
+    padding: 20px;
+    color: #666;
+}
+
+.error {
+    text-align: center;
+    padding: 20px;
+    color: #d9534f;
+    background: #f2dede;
+    border-radius: 4px;
+}
+
+.evaluation-table input:invalid {
+    border-color: #d9534f;
+    background-color: #fff3f3;
+}
+
+@media print {
+    .table-controls,
+    .charts-container {
+        display: none;
+    }
+}
