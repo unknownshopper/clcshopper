@@ -1,4 +1,4 @@
-import { ref, set, get, onValue } from 'firebase/database';
+import { ref, set, get, onValue } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-database.js';
 import { db } from './firebase-config.js';
 
 const evaluationCriteria = [
@@ -234,10 +234,21 @@ async function exportToCSV() {
     }
 }
 
-// At the top of the file, after imports
-window.updateScore = updateScore;
-window.exportToCSV = exportToCSV;
-window.logout = logout;
+// Add at the beginning of the file, after imports
+function checkAuth() {
+    if (localStorage.getItem('isAuthenticated') !== 'true') {
+        window.location.href = 'login.html';
+        return false;
+    }
+    return true;
+}
+
+window.logout = function() {
+    localStorage.removeItem('isAuthenticated');
+    localStorage.removeItem('userRole');
+    localStorage.removeItem('username');
+    window.location.href = 'login.html';
+};
 
 // Listen for real-time updates
 onValue(ref(db, 'scores'), () => {

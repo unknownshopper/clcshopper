@@ -1,17 +1,18 @@
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js';
-import { getDatabase } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-database.js';
-import { getAuth } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js';
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
 
+// Your web app's Firebase configuration
 const firebaseConfig = {
-    apiKey: "your-api-key",
-    authDomain: "your-project.firebaseapp.com",
-    databaseURL: "your-project-database-url",
-    projectId: "your-project-id",
-    storageBucket: "your-project.appspot.com",
-    messagingSenderId: "your-sender-id",
-    appId: "your-app-id"
+  apiKey: "AIzaSyBDhEs3STixAidT2l2LgXfe2yP46gjxuq8",
+  authDomain: "clc-eval.firebaseapp.com",
+  databaseURL: "https://clc-eval-default-rtdb.firebaseio.com",
+  projectId: "clc-eval",
+  storageBucket: "clc-eval.firebasestorage.app",
+  messagingSenderId: "728904020352",
+  appId: "1:728904020352:web:e655e4a503caedbb309165"
 };
 
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
-export const auth = getAuth(app);
-export const db = getDatabase(app);

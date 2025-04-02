@@ -7,18 +7,22 @@
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
+    <div id="navbar"></div>
     <div id="tableContainer"></div>
     <div class="charts-container">
         <canvas id="sucursalComparisonChart"></canvas>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- Add Firebase SDKs -->
-    <script type="module" src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js"></script>
-    <script type="module" src="https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js"></script>
-    <script type="module" src="https://www.gstatic.com/firebasejs/10.4.0/firebase-database.js"></script>
-    <!-- Your scripts -->
+    <script>
+        window.onerror = function(msg, url, lineNo, columnNo, error) {
+            console.error('Error: ', msg, '\nURL: ', url, '\nLine: ', lineNo, '\nColumn: ', columnNo, '\nError object: ', error);
+            document.getElementById('tableContainer').innerHTML = '<div class="error">Error al cargar los datos. Por favor, intente de nuevo.</div>';
+            return false;
+        };
+    </script>
     <script type="module" src="js/firebase-config.js"></script>
+    <script type="module" src="js/navbar.js"></script>
     <script type="module" src="js/table.js"></script>
 </body>
 </html>

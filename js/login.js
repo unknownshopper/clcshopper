@@ -3,8 +3,8 @@ import { db } from './firebase-config.js';
 
 const auth = getAuth();
 
-async function handleLogin(event) {
-    event.preventDefault();
+document.getElementById('loginForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
     
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
@@ -13,7 +13,6 @@ async function handleLogin(event) {
         const userCredential = await signInWithEmailAndPassword(auth, username, password);
         const user = userCredential.user;
         
-        // Store user role and auth status
         localStorage.setItem('isAuthenticated', 'true');
         localStorage.setItem('userRole', user.email.includes('admin') ? 'admin' : 'user');
         localStorage.setItem('username', username);
@@ -23,9 +22,9 @@ async function handleLogin(event) {
         console.error('Login error:', error);
         alert('Usuario o contraseña incorrectos');
     }
-}
+});
 
-// Check if already authenticated
+// Redirect if already authenticated
 if (localStorage.getItem('isAuthenticated') === 'true') {
     window.location.href = 'evaluaciones.html';
 }
