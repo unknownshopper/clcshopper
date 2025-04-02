@@ -42,6 +42,12 @@ function getRandomColor(count = 1) {
 
 async function renderSucursalComparison() {
     try {
+        // Destroy existing chart if it exists
+        const existingChart = Chart.getChart('sucursalComparisonChart');
+        if (existingChart) {
+            existingChart.destroy();
+        }
+
         const snapshot = await get(ref(db, 'scores'));
         const allScores = snapshot.val() || {};
 
@@ -95,6 +101,9 @@ async function renderSucursalComparison() {
     }
 }
 
+// Add this flag to track initial render
+let initialRenderComplete = false;
+
 async function renderTable() {
     try {
         const container = document.getElementById('tableContainer');
@@ -105,18 +114,26 @@ async function renderTable() {
         
         checkAuth();
         const userRole = localStorage.getItem('userRole');
-        container.innerHTML = '<div class="loading">Cargando...</div>';
+        
+        // Only clear and show loading on initial render
+        if (!initialRenderComplete) {
+            container.innerHTML = '<div class="loading">Cargando...</div>';
+        }
 
         const snapshot = await get(ref(db, 'scores'));
         const allScores = snapshot.val() || {};
 
+        // Create new table
+        const newTable = document.createElement('div');
+        newTable.id = 'tableContent';
+
         const controlsDiv = document.createElement('div');
         controlsDiv.className = 'table-controls';
         controlsDiv.innerHTML = `
-            ${userRole === 'admin' ? '<button onclick="exportToCSV()" class="control-btn">Exportar a CSV</button>' : ''}
-            <button onclick="logout()" class="control-btn">Cerrar Sesión</button>
+            ${userRole === 'admin' ? '<button onclick="window.exportToCSV()" class="control-btn">Exportar a CSV</button>' : ''}
+            <button onclick="window.logout()" class="control-btn">Cerrar Sesión</button>
         `;
-        container.appendChild(controlsDiv);
+        newTable.appendChild(controlsDiv);  // Append to newTable instead of container
 
         const table = document.createElement('table');
         table.className = 'evaluation-table';
@@ -175,17 +192,32 @@ async function renderTable() {
         tbody.appendChild(totalRow);
 
         table.appendChild(tbody);
-        container.appendChild(table);
+        newTable.appendChild(table);  // Append table to newTable
+
+        // Replace existing content
+        const oldContent = document.getElementById('tableContent');
+        if (oldContent) {
+            container.removeChild(oldContent);
+        }
+        container.appendChild(newTable);
         
+        initialRenderComplete = true;
         await renderSucursalComparison();
     } catch (error) {
         console.error('Error rendering table:', error);
-        const container = document.getElementById('tableContainer');
-        if (container) {
-            container.innerHTML = '<div class="error">Error al cargar los datos: ' + error.message + '</div>';
-        }
+        container.innerHTML = '<div class="error">Error al cargar los datos: ' + error.message + '</div>';
     }
 }
+
+// Modify the real-time listener
+onValue(ref(db, 'scores'), (snapshot) => {
+    if (initialRenderComplete) {
+        renderTable();
+    }
+});
+
+// Initial render
+document.addEventListener('DOMContentLoaded', renderTable);
 
 async function updateScore(sucursal, criteria, value) {
     if (localStorage.getItem('userRole') !== 'admin') {
@@ -264,4 +296,9 @@ onValue(ref(db, 'scores'), () => {
 });
 
 document.addEventListener('DOMContentLoaded', renderTable);
+
+// Add near the top of the file
+window.updateScore = updateScore;
+window.exportToCSV = exportToCSV;
+window.logout = logout;
     
