@@ -3,11 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sucursales</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <title>Evaluaciónes</title>
     <link rel="stylesheet" href="css/styles.css">
+    
 </head>
 <body>
     <nav>
@@ -16,17 +14,20 @@
             <li><a href="sucursales.html">Sucursales</a></li>
             <li><a href="evaluaciones.html">Global</a></li>
             <li><a href="graficas.html">Gráficas</a></li>
+           
         </ul>
     </nav>
-    <div class="container">
-        <ul class="sucursales-list" id="sucursalesList">
-            <!-- The list will be populated by script.js -->
-        </ul>
-    </div>
+    <h1>Evaluaciones</h1>
+    <script>
+        const months = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+        const date = new Date();
+        document.write(months[date.getMonth()] + ' ' + date.getFullYear());
+    </script>
+
     <footer>
         <p> Powered by <a href="https://unknownshoppers.com"></a> The Unknown Shopper | Copyright &copy; <script>document.write(new Date().getFullYear());</script> </p>
+        
     </footer>
     
-    <script src="js/script.js"></script>
 </body>
 </html>

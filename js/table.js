@@ -137,9 +137,8 @@ async function renderTable() {
         controlsDiv.className = 'table-controls';
         controlsDiv.innerHTML = `
             ${userRole === 'admin' ? '<button onclick="window.exportToCSV()" class="control-btn">Exportar a CSV</button>' : ''}
-            <button onclick="window.logout()" class="control-btn">Cerrar Sesión</button>
         `;
-        newTable.appendChild(controlsDiv);  // Append to newTable instead of container
+        newTable.appendChild(controlsDiv);
 
         const table = document.createElement('table');
         table.className = 'evaluation-table';
@@ -223,6 +222,22 @@ async function renderTable() {
 // Add CSS for loading spinner
 const style = document.createElement('style');
 style.textContent = `
+    .table-controls {
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 20px;
+    }
+    .control-btn {
+        padding: 8px 16px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    .control-btn:hover {
+        background-color: #45a049;
+    }
     .loading-container {
         text-align: center;
         padding: 20px;

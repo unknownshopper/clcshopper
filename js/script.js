@@ -29,7 +29,7 @@ sucursales.forEach(sucursal => {
     li.innerHTML = `
         <h3>
             ${sucursal}
-            <span class="sucursal-score">${currentScore}/10</span>
+            <span class="sucursal-score">${currentScore}/31</span>
         </h3>`;
     li.addEventListener('click', () => loadEvaluation(li, sucursal));
     sucursalesList.appendChild(li);
@@ -61,7 +61,7 @@ function loadEvaluation(li, sucursal) {
     grid.innerHTML = evaluationCriteria.map((criteria, index) => `
         <div class="eval-item">
             ${index + 1}. ${criteria} 
-            <input type="number" min="0" max="10" 
+            <input type="number" min="0" max="2" 
                 value="${savedScores[criteria] || ''}"
                 onchange="saveScore('${sucursal}', '${criteria}', this.value)">
         </div>
@@ -118,6 +118,7 @@ function calculateTotal(scores) {
     return total.toFixed(1); // Return total sum instead of average
 }
 
+// Update the show all button redirect
 showAllButton.addEventListener('click', () => {
     window.location.href = 'evaluaciones.html';
 });

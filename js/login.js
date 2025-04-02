@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
             localStorage.setItem('userRole', username.includes('admin') ? 'admin' : 'user');
             localStorage.setItem('username', username);
             
-            window.location.href = 'evaluaciones.html';
+            window.location.href = 'home.html';
         } catch (error) {
             console.error('Login error:', error);
             alert('Error: ' + error.message);
@@ -30,7 +30,19 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// Redirect if already authenticated
+// Remove this redirect check from the top level so users can access the login page
+/* Remove this block
 if (localStorage.getItem('isAuthenticated') === 'true') {
-    window.location.href = 'evaluaciones.html';
+    window.location.href = 'home.html';
 }
+*/
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Only check for redirect if not on the login page
+    if (!window.location.pathname.includes('index.html') && 
+        localStorage.getItem('isAuthenticated') === 'true') {
+        window.location.href = 'home.html';
+    }
+});
+
+// Remove the unused handleLogin function

@@ -4,8 +4,10 @@ function createNavbar() {
 
     navbar.innerHTML = `
         <nav class="navbar">
-            <a href="index.html" class="nav-link">Inicio</a>
+            <a href="home.html" class="nav-link">Inicio</a>
+            <a href="sucursales.html" class="nav-link">Sucursales</a>
             <a href="evaluaciones.html" class="nav-link">Evaluaciones</a>
+            <a href="graficas.html" class="nav-link">Gráficas</a>
             <div class="nav-right">
                 <span class="username">${localStorage.getItem('username') || ''}</span>
                 <button onclick="window.logout()" class="nav-btn">Cerrar Sesión</button>
