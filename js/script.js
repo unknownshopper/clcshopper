@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         sucursalesList.appendChild(li);
     }
 
-    // Add Show All button
+    // Add Show All button (keep only this one)
     const showAllButton = document.createElement('button');
     showAllButton.textContent = 'Mostrar Todas las Evaluaciones';
     showAllButton.className = 'show-all-btn';
@@ -102,10 +102,13 @@ async function loadEvaluation(li, sucursal) {
 }
 
 // Add "Show All" button after the list
+// Remove this duplicate button creation
+/* Remove these lines
 const showAllButton = document.createElement('button');
 showAllButton.textContent = 'Mostrar Todas las Evaluaciones';
 showAllButton.className = 'show-all-btn';
 sucursalesList.after(showAllButton);
+*/
 
 // Add current date handling
 const currentDate = new Date();
