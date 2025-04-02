@@ -127,10 +127,12 @@ ul:not(nav ul) li:hover {
     color: #333;
 }
 
+/* Fix evaluation table visibility */
 .evaluation-table-container {
     max-width: 90%;
     margin: 2rem auto;
     overflow-x: auto;
+    display: block; /* Ensure container is visible */
 }
 
 .evaluation-table {
@@ -138,6 +140,17 @@ ul:not(nav ul) li:hover {
     border-collapse: collapse;
     background: white;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    display: table; /* Ensure table is visible */
+}
+
+/* Remove the rule that might be hiding tables */
+.charts-container:not(.charts-page .charts-container) {
+    display: none;
+}
+
+/* Keep charts specific to charts page */
+.charts-page .charts-container {
+    display: block;
 }
 
 .evaluation-table th,
@@ -225,34 +238,38 @@ ul:not(nav ul) li:hover {
     color: #333;
 }
 
-/* Update charts container styles */
-/* Charts page specific styles */
+/* Fix charts page styles */
 .charts-page {
     padding: 2rem;
     max-width: 1400px;
     margin: 0 auto;
-    min-height: calc(100vh - 100px); /* Account for nav and padding */
+    min-height: calc(100vh - 100px);
 }
 
-.charts-container {
+.charts-page .charts-container {
     background: white;
     padding: 2rem;
     border-radius: 12px;
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    height: 80vh; /* Taller container for better visibility */
+    height: 80vh;
 }
 
-.charts-container h2 {
+.charts-page .charts-container h2 {
     text-align: center;
     margin-bottom: 2rem;
     color: #333;
     font-size: 1.8rem;
 }
 
-#sucursalComparisonChart {
-    height: calc(100% - 60px) !important; /* Subtract header height */
+.charts-page #sucursalComparisonChart {
+    height: calc(100% - 60px) !important;
     width: 100% !important;
     margin: 0 auto;
+}
+
+/* Remove duplicate styles and nested rules */
+.charts-container:not(.charts-page .charts-container) {
+    display: none;
 }
 
 /* Responsive adjustments */
@@ -651,5 +668,42 @@ input[disabled] {
     .charts-container {
         height: auto;
         page-break-inside: avoid;
+    }
+}
+
+.navbar {
+    position: relative;
+    z-index: 1000;
+}
+
+.mobile-menu {
+    background-color: #333;
+}
+
+@media screen and (max-width: 768px) {
+    .nav-menu {
+        position: fixed;
+        top: 60px;
+        left: 0;
+        right: 0;
+        z-index: 999;
+        padding: 1rem;
+    }
+
+    .nav-menu.active {
+        display: block;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+    .nav-links {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .nav-link {
+        display: block;
+        padding: 0.8rem;
+        text-align: center;
     }
 }

@@ -3,26 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Evaluaciones CLC</title>
+    <title>Evaluaciones</title>
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
     <div id="navbar"></div>
-    <div id="tableContainer"></div>
-    <div class="charts-container">
-        <canvas id="sucursalComparisonChart"></canvas>
+
+    <div class="evaluation-table-container">
+        <select id="monthSelector" class="month-selector"></select>
+        
+        <div class="table-controls">
+            <button class="control-btn" id="saveBtn">Guardar</button>
+            <button class="control-btn" id="printBtn">Imprimir</button>
+        </div>
+
+        <table class="evaluation-table">
+            <thead>
+                <tr>
+                    <th>Altabrisa</th>
+                    <th>Américas</th>
+                    <th>Ángeles</th>
+                    <th>Centro</th>
+                    <th>Cristal</th>
+                    <th>Galerías</th>
+                    <th>Deportiva</th>
+                    <th>Guayabal</th>
+                    <th>Olmeca</th>
+                    <th>Pista de Hielo</th>
+                    <th>Usuma</th>
+                    <th>Móvil Deportiva</th>
+                    <th>Móvil la Venta</th>
+                    <th>Walmart Carrizal</th>
+                    <th>Walmart Deportiva</th>
+                    <th>Walmart Universidad</th>
+                </tr>
+            </thead>
+            <tbody id="evaluationTableBody">
+                <!-- Rows will be populated by JavaScript with evaluation parameters -->
+            </tbody>
+        </table>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        window.onerror = function(msg, url, lineNo, columnNo, error) {
-            console.error('Error: ', msg, '\nURL: ', url, '\nLine: ', lineNo, '\nColumn: ', columnNo, '\nError object: ', error);
-            document.getElementById('tableContainer').innerHTML = '<div class="error">Error al cargar los datos. Por favor, intente de nuevo.</div>';
-            return false;
-        };
-    </script>
     <script type="module" src="js/firebase-config.js"></script>
     <script type="module" src="js/navbar.js"></script>
-    <script type="module" src="js/table.js"></script>
+    <script type="module" src="js/evaluaciones.js"></script>
 </body>
 </html>
