@@ -1,22 +1,17 @@
 function createNavbar() {
-    const navbar = document.createElement('nav');
-    navbar.className = 'navbar';
-    
-    const userRole = localStorage.getItem('userRole');
-    const username = localStorage.getItem('username');
-    
+    const navbar = document.getElementById('navbar');
+    if (!navbar) return;
+
     navbar.innerHTML = `
-        <div class="nav-brand">CLC Evaluaciones</div>
-        <div class="nav-links">
-            ${userRole ? `
-                <span class="user-info">Usuario: ${username} (${userRole})</span>
-                <a href="evaluaciones.html">Evaluaciones</a>
-                <button onclick="logout()" class="nav-btn">Cerrar Sesión</button>
-            ` : ''}
-        </div>
+        <nav class="navbar">
+            <a href="index.html" class="nav-link">Inicio</a>
+            <a href="evaluaciones.html" class="nav-link">Evaluaciones</a>
+            <div class="nav-right">
+                <span class="username">${localStorage.getItem('username') || ''}</span>
+                <button onclick="window.logout()" class="nav-btn">Cerrar Sesión</button>
+            </div>
+        </nav>
     `;
-    
-    document.body.insertBefore(navbar, document.body.firstChild);
 }
 
 document.addEventListener('DOMContentLoaded', createNavbar);

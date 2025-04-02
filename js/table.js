@@ -104,6 +104,9 @@ async function renderSucursalComparison() {
 // Add this flag to track initial render
 let initialRenderComplete = false;
 
+// Add loading state management
+let isLoading = true;
+
 async function renderTable() {
     try {
         const container = document.getElementById('tableContainer');
@@ -112,18 +115,21 @@ async function renderTable() {
             return;
         }
         
-        checkAuth();
-        const userRole = localStorage.getItem('userRole');
-        
-        // Only clear and show loading on initial render
-        if (!initialRenderComplete) {
-            container.innerHTML = '<div class="loading">Cargando...</div>';
+        if (isLoading) {
+            container.innerHTML = `
+                <div class="loading-container">
+                    <div class="loading-spinner"></div>
+                    <p>Cargando datos...</p>
+                </div>`;
         }
 
+        await checkAuth();  // Make sure auth check completes
+        const userRole = localStorage.getItem('userRole');
+        
         const snapshot = await get(ref(db, 'scores'));
         const allScores = snapshot.val() || {};
 
-        // Create new table
+        // Create new table content
         const newTable = document.createElement('div');
         newTable.id = 'tableContent';
 
@@ -199,15 +205,51 @@ async function renderTable() {
         if (oldContent) {
             container.removeChild(oldContent);
         }
+        container.innerHTML = '';  // Clear loading state
         container.appendChild(newTable);
         
-        initialRenderComplete = true;
         await renderSucursalComparison();
     } catch (error) {
         console.error('Error rendering table:', error);
-        container.innerHTML = '<div class="error">Error al cargar los datos: ' + error.message + '</div>';
+        const container = document.getElementById('tableContainer');
+        container.innerHTML = `
+            <div class="error-container">
+                <p>Error al cargar los datos: ${error.message}</p>
+                <button onclick="location.reload()">Intentar de nuevo</button>
+            </div>`;
     }
 }
+
+// Add CSS for loading spinner
+const style = document.createElement('style');
+style.textContent = `
+    .loading-container {
+        text-align: center;
+        padding: 20px;
+    }
+    .loading-spinner {
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid #3498db;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+        margin: 20px auto;
+    }
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    .error-container {
+        text-align: center;
+        padding: 20px;
+        color: #721c24;
+        background-color: #f8d7da;
+        border: 1px solid #f5c6cb;
+        border-radius: 4px;
+    }
+`;
+document.head.appendChild(style);
 
 // Modify the real-time listener
 onValue(ref(db, 'scores'), (snapshot) => {
