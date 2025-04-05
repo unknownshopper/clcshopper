@@ -23,13 +23,35 @@ const sucursales = [
 
 document.addEventListener('DOMContentLoaded', async () => {
     const tableBody = document.getElementById('evaluationTableBody');
-    if (!tableBody) return;
+    const monthSelector = document.getElementById('monthSelector');
+    if (!tableBody || !monthSelector) return;
 
-    // Get all scores at once instead of individual queries
-    const scoresSnapshot = await get(ref(db, 'scores'));
+    // Get current month first
+    const currentDate = new Date();
+    const currentYear = currentDate.getFullYear();
+    const currentMonth = `${currentYear}-${String(currentDate.getMonth() + 1).padStart(2, '0')}`;
+
+    // Setup month selector
+    const years = [currentYear - 1, currentYear, currentYear + 1];
+    years.forEach(year => {
+        for (let month = 0; month < 12; month++) {
+            const date = new Date(year, month, 1);
+            const option = document.createElement('option');
+            option.value = `${year}-${String(month + 1).padStart(2, '0')}`;
+            option.textContent = date.toLocaleString('es-MX', { month: 'long', year: 'numeric' });
+            
+            if (year === currentYear && month === currentDate.getMonth()) {
+                option.selected = true;
+            }
+            monthSelector.appendChild(option);
+        }
+    });
+
+    // Get initial scores
+    const scoresSnapshot = await get(ref(db, `scores/${currentMonth}`));
     const allScores = scoresSnapshot.val() || {};
 
-    // Create table header
+    // Create table structure
     const thead = document.querySelector('thead tr');
     thead.innerHTML = `
         <th>Parámetros</th>
@@ -37,9 +59,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     `;
 
     // Create table body
-    const fragment = document.createDocumentFragment();
-
-    // Create rows for each evaluation criteria
     evaluationCriteria.forEach(criteria => {
         const row = document.createElement('tr');
         row.innerHTML = `
@@ -54,14 +73,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             `).join('')}
         `;
 
-        // Add event listeners
-        row.querySelectorAll('input').forEach(input => {
-            input.addEventListener('change', async (e) => {
-                await saveScore(e.target.dataset.sucursal, e.target.dataset.criteria, e.target.value);
-            });
-        });
-
-        fragment.appendChild(row);
+        tableBody.appendChild(row);
     });
 
     // Add total row
@@ -73,23 +85,110 @@ document.addEventListener('DOMContentLoaded', async () => {
             <td id="total-${sucursal}">${calculateTotal(allScores[sucursal] || {})}</td>
         `).join('')}
     `;
-    fragment.appendChild(totalRow);
+    tableBody.appendChild(totalRow);
 
-    // Append all rows at once
-    tableBody.appendChild(fragment);
+    // Add logrado row
+    const logradoRow = document.createElement('tr');
+    logradoRow.className = 'logrado-row';
+    logradoRow.innerHTML = `
+        <td>Logrado</td>
+        ${sucursales.map(sucursal => `
+            <td id="logrado-${sucursal}">${calculatePercentage(allScores[sucursal] || {})}</td>
+        `).join('')}
+    `;
+    tableBody.appendChild(logradoRow);
 
-    // Set up real-time updates
-    onValue(ref(db, 'scores'), (snapshot) => {
+    // Remove these lines as they're not defined
+    // setupEventListeners();
+    // setupRealtimeUpdates(currentMonth);
+
+    // Add real-time updates
+    onValue(ref(db, `scores/${currentMonth}`), (snapshot) => {
         const scores = snapshot.val() || {};
         updateAllInputs(scores);
         updateAllTotals(scores);
     });
+
+    // Add input change listeners
+    document.querySelectorAll('input[type="number"]').forEach(input => {
+        input.addEventListener('change', async (e) => {
+            const value = e.target.value;
+            const { sucursal, criteria } = e.target.dataset;
+            const selectedMonth = monthSelector.value;
+            
+            try {
+                await saveScore(selectedMonth, sucursal, criteria, value);
+                updateAllTotals(allScores);
+            } catch (error) {
+                console.error('Error saving score:', error);
+                e.target.value = allScores[sucursal]?.[criteria] || '';
+            }
+        });
+    });
+
+    // Add save button functionality
+    const saveBtn = document.getElementById('saveBtn');
+    if (saveBtn) {
+        saveBtn.addEventListener('click', async () => {
+            try {
+                const inputs = document.querySelectorAll('input[type="number"]');
+                const selectedMonth = monthSelector.value;
+                
+                for (const input of inputs) {
+                    const { sucursal, criteria } = input.dataset;
+                    const value = input.value;
+                    if (value !== '') {
+                        await saveScore(selectedMonth, sucursal, criteria, value);
+                    }
+                }
+                
+                alert('Evaluaciones guardadas exitosamente');
+            } catch (error) {
+                console.error('Error saving scores:', error);
+                alert('Error al guardar las evaluaciones');
+            }
+        });
+    }
 });
 
+// Updated saveScore function
+async function saveScore(month, sucursal, criteria, value) {
+    const numberValue = Number(value);
+    // Allow empty values (they won't be saved)
+    if (value === '') {
+        return;
+    }
+    // Check if it's a valid number and within range
+    if (isNaN(numberValue) || numberValue < 0 || numberValue > 2) {
+        alert(`Por favor ingrese un valor entre 0 y 2 para ${criteria} en ${sucursal}`);
+        throw new Error('Invalid score value');
+    }
+    await set(ref(db, `scores/${month}/${sucursal}/${criteria}`), numberValue);
+}
+
 function calculateTotal(scores) {
-    return Object.values(scores)
-        .reduce((sum, score) => sum + Number(score || 0), 0)
-        .toFixed(1);
+    return Math.round(Object.values(scores)
+        .reduce((sum, score) => sum + Number(score || 0), 0));
+}
+
+function calculatePercentage(scores) {
+    const total = Object.values(scores).reduce((sum, score) => sum + Number(score || 0), 0);
+    const percentage = Math.round((total / 31) * 100);
+    return `<div class="percentage ${getColorClass(percentage)}">${percentage}%</div>`;
+}
+
+function getColorClass(percentage) {
+    return percentage >= 95 ? 'cell-green' : 
+           percentage >= 90 ? 'cell-orange' : 'cell-red';
+}
+
+function updateAllTotals(scores) {
+    sucursales.forEach(sucursal => {
+        const total = calculateTotal(scores[sucursal] || {});
+        const percentage = calculatePercentage(scores[sucursal] || {});
+        document.getElementById(`total-${sucursal}`).textContent = total;
+        document.getElementById(`logrado-${sucursal}`).innerHTML = percentage;
+    });
 }
 
 function updateAllInputs(scores) {
@@ -97,15 +196,5 @@ function updateAllInputs(scores) {
         const { sucursal, criteria } = input.dataset;
         input.value = scores[sucursal]?.[criteria] || '';
     });
-}
-
-function updateAllTotals(scores) {
-    sucursales.forEach(sucursal => {
-        const total = calculateTotal(scores[sucursal] || {});
-        document.getElementById(`total-${sucursal}`).textContent = total;
-    });
-}
-
-async function saveScore(sucursal, criteria, value) {
-    await set(ref(db, `scores/${sucursal}/${criteria}`), Number(value));
+    updateAllTotals(scores);
 }

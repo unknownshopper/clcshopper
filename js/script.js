@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         li.innerHTML = `
             <h3>
                 ${sucursal}
-                <span class="sucursal-score">${currentScore}/62</span>
+                <span class="sucursal-score">${currentScore}/31</span>
             </h3>`;
         li.addEventListener('click', () => loadEvaluation(li, sucursal));
         sucursalesList.appendChild(li);

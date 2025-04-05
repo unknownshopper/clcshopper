@@ -28,83 +28,7 @@ function calculateTotal(scores) {
     return total.toFixed(1);
 }
 
-function getRandomColor(count = 1) {
-    const colorPalette = [
-        '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEEAD',
-        '#D4A5A5', '#9B59B6', '#3498DB', '#E67E22', '#2ECC71',
-        '#E74C3C', '#1ABC9C', '#F1C40F', '#34495E', '#7F8C8D',
-        '#16A085'
-    ];
-    return count === 1 
-        ? colorPalette[Math.floor(Math.random() * colorPalette.length)]
-        : sucursales.map((_, index) => colorPalette[index % colorPalette.length]);
-}
-
-async function renderSucursalComparison() {
-    try {
-        // Destroy existing chart if it exists
-        const existingChart = Chart.getChart('sucursalComparisonChart');
-        if (existingChart) {
-            existingChart.destroy();
-        }
-
-        const snapshot = await get(ref(db, 'scores'));
-        const allScores = snapshot.val() || {};
-
-        const scores = sucursales.map(sucursal => ({
-            sucursal: sucursal,
-            total: calculateTotal(allScores[sucursal])
-        })).sort((a, b) => b.total - a.total);
-
-        new Chart('sucursalComparisonChart', {
-            type: 'bar',
-            data: {
-                labels: scores.map(item => item.sucursal),
-                datasets: [{
-                    label: 'Puntuación Total',
-                    data: scores.map(item => item.total),
-                    backgroundColor: getRandomColor(sucursales.length),
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    title: {
-                        display: true,
-                        text: 'Total de Puntos por Sucursal',
-                        font: { size: 16 }
-                    },
-                    legend: { display: false }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        max: 62,
-                        title: {
-                            display: true,
-                            text: 'Puntos Totales'
-                        }
-                    },
-                    x: {
-                        ticks: {
-                            maxRotation: 45,
-                            minRotation: 45
-                        }
-                    }
-                }
-            }
-        });
-    } catch (error) {
-        console.error('Error rendering chart:', error);
-    }
-}
-
-// Add this flag to track initial render
 let initialRenderComplete = false;
-
-// Add loading state management
 let isLoading = true;
 
 async function renderTable() {
@@ -123,7 +47,7 @@ async function renderTable() {
                 </div>`;
         }
 
-        await checkAuth();  // Make sure auth check completes
+        await checkAuth();
         const userRole = localStorage.getItem('userRole');
         
         const snapshot = await get(ref(db, 'scores'));
@@ -206,8 +130,6 @@ async function renderTable() {
         }
         container.innerHTML = '';  // Clear loading state
         container.appendChild(newTable);
-        
-        await renderSucursalComparison();
     } catch (error) {
         console.error('Error rendering table:', error);
         const container = document.getElementById('tableContainer');
@@ -220,51 +142,11 @@ async function renderTable() {
 }
 
 // Add CSS for loading spinner
-const style = document.createElement('style');
-style.textContent = `
-    .table-controls {
-        display: flex;
-        justify-content: flex-end;
-        margin-bottom: 20px;
-    }
-    .control-btn {
-        padding: 8px 16px;
-        background-color: #4CAF50;
-        color: white;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-    }
-    .control-btn:hover {
-        background-color: #45a049;
-    }
-    .loading-container {
-        text-align: center;
-        padding: 20px;
-    }
-    .loading-spinner {
-        border: 4px solid #f3f3f3;
-        border-top: 4px solid #3498db;
-        border-radius: 50%;
-        width: 40px;
-        height: 40px;
-        animation: spin 1s linear infinite;
-        margin: 20px auto;
-    }
-    @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-    }
-    .error-container {
-        text-align: center;
-        padding: 20px;
-        color: #721c24;
-        background-color: #f8d7da;
-        border: 1px solid #f5c6cb;
-        border-radius: 4px;
-    }
-`;
-document.head.appendChild(style);
+// Remove the style creation and append section
+// Remove this block:
+// const style = document.createElement('style');
+// style.textContent = `...`;
+// document.head.appendChild(style);
 
 // Modify the real-time listener
 onValue(ref(db, 'scores'), (snapshot) => {

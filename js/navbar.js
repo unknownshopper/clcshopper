@@ -14,7 +14,6 @@ function createNavbar() {
                     <a href="home.html" class="nav-link">Inicio</a>
                     <a href="sucursales.html" class="nav-link">Sucursales</a>
                     <a href="evaluaciones.html" class="nav-link">Evaluaciones</a>
-                    <a href="graficas.html" class="nav-link">Gráficas</a>
                 </div>
             </div>
         </nav>

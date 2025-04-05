@@ -1,12 +1,13 @@
+/* Base styles */
 * {
     font-family: 'Ubuntu', sans-serif;
 }
+
 body {
     background-color: #f5f5f5;
-    font-family: Arial, sans-serif;
-
 }
 
+/* Navigation */
 nav {
     background-color: #333;
     color: #fff;
@@ -14,18 +15,6 @@ nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
-}
-nav ul {
-    list-style: none;
-    display: flex;  
-}
-nav li {
-    margin-right: 20px;
-}
-nav a {
-    color: #fff;
-    text-decoration: none;
-    font-weight: bold;
 }
 
 /* Styles for the sucursales list */
@@ -143,16 +132,6 @@ ul:not(nav ul) li:hover {
     display: table; /* Ensure table is visible */
 }
 
-/* Remove the rule that might be hiding tables */
-.charts-container:not(.charts-page .charts-container) {
-    display: none;
-}
-
-/* Keep charts specific to charts page */
-.charts-page .charts-container {
-    display: block;
-}
-
 .evaluation-table th,
 .evaluation-table td {
     padding: 12px;
@@ -171,11 +150,42 @@ ul:not(nav ul) li:hover {
     background-color: #f8f8f8;
 }
 
+/* Table Controls */
 .table-controls {
-    margin-bottom: 20px;
     display: flex;
-    gap: 10px;
-    justify-content: center;
+    justify-content: flex-end;
+    margin-bottom: 20px;
+}
+
+/* Loading States */
+.loading-container {
+    text-align: center;
+    padding: 20px;
+}
+
+.loading-spinner {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #3498db;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin: 20px auto;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Error States */
+.error-container {
+    text-align: center;
+    padding: 20px;
+    color: #721c24;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    border-radius: 4px;
 }
 
 .control-btn {
@@ -238,49 +248,14 @@ ul:not(nav ul) li:hover {
     color: #333;
 }
 
-/* Fix charts page styles */
-.charts-page {
-    padding: 2rem;
-    max-width: 1400px;
-    margin: 0 auto;
-    min-height: calc(100vh - 100px);
-}
-
-.charts-page .charts-container {
-    background: white;
-    padding: 2rem;
-    border-radius: 12px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    height: 80vh;
-}
-
-.charts-page .charts-container h2 {
-    text-align: center;
-    margin-bottom: 2rem;
-    color: #333;
-    font-size: 1.8rem;
-}
-
-.charts-page #sucursalComparisonChart {
-    height: calc(100% - 60px) !important;
-    width: 100% !important;
-    margin: 0 auto;
-}
-
-/* Remove duplicate styles and nested rules */
-.charts-container:not(.charts-page .charts-container) {
-    display: none;
-}
-
 /* Responsive adjustments */
 @media (max-width: 1200px) {
-    .charts-page {
+    .evaluation-table-container {
         padding: 1rem;
     }
     
-    .charts-container {
+    .statistics {
         padding: 1.5rem;
-        height: 70vh;
     }
 }
 
@@ -473,8 +448,15 @@ input[disabled] {
 
 @media print {
     .table-controls,
-    .charts-container {
+    .navbar,
+    .nav-toggle,
+    .show-all-btn,
+    .control-btn {
         display: none;
+    }
+
+    .evaluation-table {
+        page-break-inside: avoid;
     }
 }
 
@@ -600,18 +582,7 @@ input[disabled] {
     }
 
     /* Charts */
-    .charts-page {
-        padding: 0.5rem;
-    }
 
-    .charts-container {
-        padding: 1rem;
-        height: 60vh;
-    }
-
-    .charts-container h2 {
-        font-size: 1.4rem;
-    }
 }
 
 /* Additional tablet breakpoint */
@@ -624,9 +595,6 @@ input[disabled] {
         max-width: 95%;
     }
 
-    .charts-container {
-        height: 70vh;
-    }
 }
 
 /* Small phone breakpoint */
@@ -664,11 +632,7 @@ input[disabled] {
     .evaluation-table {
         page-break-inside: avoid;
     }
-
-    .charts-container {
-        height: auto;
-        page-break-inside: avoid;
-    }
+ 
 }
 
 .navbar {
@@ -706,4 +670,54 @@ input[disabled] {
         padding: 0.8rem;
         text-align: center;
     }
+}
+
+/* Status Colors */
+.green { color: #008000; font-weight: bold; }
+.orange { color: #FFA500; font-weight: bold; }
+.red { color: #FF0000; font-weight: bold; }
+
+.cell-green {
+    background-color: #90EE90;
+    padding: 8px;
+    border-radius: 4px;
+}
+
+.cell-orange {
+    background-color: #FFB74D;
+    padding: 8px;
+    border-radius: 4px;
+}
+
+.cell-red {
+    background-color: #FF8A80;
+    padding: 8px;
+    border-radius: 4px;
+}
+
+/* Progress Elements */
+.percentage {
+    font-weight: bold;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 10px;
+    background-color: #eee;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-top: 10px;
+}
+
+.progress {
+    height: 100%;
+    transition: width 0.3s ease;
+}
+
+.sucursal-card {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 15px;
 }
